@@ -22,8 +22,11 @@ static const char* RECT_FRAG_SHADER = R"END(
 class Rectangle {
 
 public:
-    Rectangle(); 
+    Rectangle(float x, float y, float width, float height); 
+
+    void BufferData(); 
 
 private:
+    float x, y, width, height; 
 
 };
