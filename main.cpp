@@ -3,6 +3,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "rect.h"
+#include "shader.h"
+
 static int fbWidth = 640, fbHeight = 480; 
 
 static void onFramebufferResize(GLFWwindow* window, int width, int height) {
@@ -34,25 +37,31 @@ int main() {
     
     glfwSetFramebufferSizeCallback(window, onFramebufferResize);
 
+    Rectangle rect{};
+
+    uint32_t vbo, program, vertexCount;
+    glGenBuffers(1, &vbo);  
+    glBindBuffer(GL_ARRAY_BUFFER, vbo); 
+
+    const float data[] = {
+        -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f
+    };
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0); 
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0); 
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float))); 
+
+    Shader rectangleShader(RECT_VERTEX_SHADER, RECT_FRAG_SHADER);
+
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
-
-        // in pixels
-        auto borderSize = 10.0f; 
-
-        auto borderWidth = borderSize / fbWidth;
-        auto borderLeft = -(1 - borderWidth);
-        auto borderRight = 1 - borderWidth;
-
-        auto borderHeight = borderSize / fbHeight;
-        auto borderTop = -(1 - borderHeight);
-        auto borderBottom = 1 - borderHeight;
-
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glRectf(-1.0f, -1.0f, 1.0f, 1.0f);
-        glColor3f(0.0f, 0.0f, 0.0f);
-        glRectf(borderLeft, borderTop, borderRight, borderBottom);
-
+        rectangleShader.Bind(); 
+        glDrawArrays(GL_TRIANGLES, 0, 3); 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQIRED True)
 
 include_directories(glad/include)
 
-add_executable(${CMAKE_PROJECT_NAME} main.cpp)
+add_executable(${CMAKE_PROJECT_NAME} main.cpp rect.cpp shader.cpp)
 
 add_subdirectory(glfw)
 target_link_libraries(${CMAKE_PROJECT_NAME} glfw)
