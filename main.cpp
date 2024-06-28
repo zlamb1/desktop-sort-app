@@ -46,14 +46,18 @@ int main() {
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float))); 
 
-    auto rectShader = Shader(RECT_VERTEX_SHADER, RECT_FRAG_SHADER);
-    auto rect = Rectangle(0.0f, 0.0f, 1.0f, 1.0f);
+    auto rectShader = Shader();
+    rectShader.AttachShader(RECT_VERTEX_SHADER, GL_VERTEX_SHADER);
+    rectShader.AttachShader(RECT_FRAG_SHADER, GL_FRAGMENT_SHADER); 
+    rectShader.CompileProgram(); 
+
+    auto rect = Rectangle(0.25f, 0.25f, 0.5f, 0.5f);
     rect.BufferData(); 
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
         rectShader.Bind(); 
-        glDrawArrays(GL_TRIANGLES, 0, 3); 
+        glDrawArrays(GL_TRIANGLES, 0, 6); 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

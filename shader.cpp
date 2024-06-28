@@ -4,44 +4,45 @@
 
 #include "shader.h"
 
-Shader::Shader(const char* vertexShaderSrc, const char* fragmentShaderSrc) : m_Program(0) {
+Shader::Shader() : m_Program(0) {
+    m_Program = glCreateProgram(); 
+}
+
+bool Shader::AttachShader(const char* shaderSrc, GLenum shaderType) {
     int32_t success;
     char infoLog[512]; 
-
-    uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSrc, NULL);
-    glCompileShader(vertexShader);
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    uint32_t shader = glCreateShader(shaderType);
+    glShaderSource(shader, 1, &shaderSrc, NULL);
+    glCompileShader(shader);
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-        return;
+        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::" << shaderType << "::COMPILATION_FAILED\n" << infoLog << std::endl;
+        return false; 
     }
 
-    uint32_t fragmentShader = glCreateShader(GL_FRAGMENT_SHADER); 
-    glShaderSource(fragmentShader, 1, &fragmentShaderSrc, NULL);
-    glCompileShader(fragmentShader);
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-        return; 
-    }
+    glAttachShader(m_Program, shader);
+    m_AttachedShaders.emplace_back(shader); 
+    return true; 
+}
 
-    uint32_t program = glCreateProgram();
-    glAttachShader(program, vertexShader);
-    glAttachShader(program, fragmentShader);
-    glLinkProgram(program);
-    glGetProgramiv(program, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(program, 512, NULL, infoLog);
+bool Shader::CompileProgram() {
+    int32_t success;
+    char infoLog[512]; 
+    glLinkProgram(m_Program);
+    glGetProgramiv(m_Program, GL_LINK_STATUS, &success);
+    if (success) {
+        for (auto& shader : m_AttachedShaders) {
+            glDeleteShader(shader); 
+        }
+
+        m_AttachedShaders.clear(); 
+    } else {
+        glGetProgramInfoLog(m_Program, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-        return; 
     }
-  
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    m_Program = program; 
+    
+    return success; 
 }
 
 void Shader::Bind() {

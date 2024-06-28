@@ -16,6 +16,9 @@ void Rectangle::BufferData() {
         screenSpaceX, -screenSpaceY, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
         screenSpaceX, -screenSpaceY - height * 2.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
         screenSpaceX + width * 2.0f, -screenSpaceY - height * 2.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        screenSpaceX + width * 2.0f, -screenSpaceY - height * 2.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        screenSpaceX + width * 2.0f, -screenSpaceY, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+        screenSpaceX, -screenSpaceY, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
     };
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(data), &data, GL_STATIC_DRAW);
