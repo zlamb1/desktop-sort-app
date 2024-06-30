@@ -1,51 +1,47 @@
 #pragma once
 
-static const char* RECT_VERTEX_SHADER = R"END(
-    #version 450 core
-    in vec3 iPosition; 
-    in vec4 iColor; 
-    out vec3 fragPosition; 
-    out vec4 fragDiffuseColor; 
-    void main() {
-        gl_Position = vec4(iPosition, 1.0); 
-        fragPosition = iPosition; 
-        fragDiffuseColor = iColor; 
-    })END";
+#include <vector>
 
+template<typename T> 
+struct Vec2 {
+    T x, y; 
+};
 
-static const char* RECT_FRAG_SHADER = R"END(
-    #version 450 core
-    in vec3 fragPosition;
-    in vec4 fragDiffuseColor; 
-    out vec4 outputColor;
+template<typename T>
+struct Vec3 {
+    T x, y, z; 
+};
 
-    float circle_sdf(vec2 samplePosition, vec2 centerPosition, float radius) {
-        return distance(samplePosition, centerPosition) - radius;
-    }
+template<typename T>
+struct Vec4 {
+    T x, y, z, w;
+};
 
-    float rect_sdf(vec2 samplePosition, vec2 centerPosition, vec2 halfSize) {
-        vec2 edgeWiseDistance = abs(samplePosition) - halfSize; 
-        return min(max(edgeWiseDistance.x, edgeWiseDistance.y), 0) + length(max(edgeWiseDistance, 0.0)); 
-    }
+struct BorderRadius {
+    float topLeft, topRight, bottomLeft, bottomRight;
 
-    void main() {
-        float signed_dist = rect_sdf(fragPosition.xy, vec2(0, 0), vec2(0.5, 0.5));
+    BorderRadius(float radius) : topLeft(radius), topRight(radius), bottomLeft(radius), bottomRight(radius) {}
+    BorderRadius(float topLeft, float topRight, float bottomLeft, float bottomRight) : 
+        topLeft(topLeft), topRight(topRight), bottomLeft(bottomLeft), bottomRight(bottomRight) {}
+};
 
-        if (signed_dist > 0) {
-            discard;
-        }
-
-        outputColor = fragDiffuseColor;
-    })END";
+struct BoundingRect {
+    float left, right, top, bottom; 
+};
 
 class Rectangle {
 
 public:
+    Rectangle(); 
     Rectangle(float x, float y, float width, float height); 
 
-    void BufferData(); 
+    Vec2<float> GetCenter() const;
+    BoundingRect GetBoundingRect() const;
+    const BorderRadius& GetRadius() const;
+    BorderRadius GetNormalizedRadius() const; 
 
 private:
-    float x, y, width, height; 
+    float x, y, width, height;
+    BorderRadius radius{ 1.0f };
 
 };
