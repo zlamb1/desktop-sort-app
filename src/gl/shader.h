@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "math.h"
+
 class Shader {
 
 public:
@@ -11,6 +13,10 @@ public:
     bool CompileProgram(); 
 
     void Bind(); 
+
+    // Uniforms
+
+    void SetUniformVec2f(const char* name, Vec2<float> data);
 
 private:
     uint32_t m_Program;

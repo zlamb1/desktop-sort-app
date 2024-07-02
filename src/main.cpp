@@ -3,10 +3,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "rect.h"
-#include "shader.h"
+#include "ui/rect.h"
 
-#include "gl_renderer.h"
+#include "gl/shader.h"
+#include "gl/gl_renderer.h"
 
 static int fbWidth = 640, fbHeight = 480; 
 
@@ -43,33 +43,38 @@ int main() {
     glGenBuffers(1, &vbo);  
     glBindBuffer(GL_ARRAY_BUFFER, vbo); 
 
-    const size_t vertexSize = sizeof(GLRect::Vertex); 
+    const size_t vertexSize = sizeof(GL::RectVertex); 
 
     glEnableVertexAttribArray(0); 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)0); 
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(GLRect::Vertex, rgba))); 
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(GL::RectVertex, rgba))); 
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(GLRect::Vertex, center))); 
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(GL::RectVertex, center))); 
     glEnableVertexAttribArray(3); 
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(GLRect::Vertex, radius))); 
-    glEnableVertexAttribArray(4); 
-    glVertexAttribIPointer(4, 1, GL_INT, vertexSize, (void*)(offsetof(GLRect::Vertex, axis)));
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(GL::RectVertex, extents))); 
+    glEnableVertexAttribArray(4);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(GL::RectVertex, radius))); 
 
-    auto rect = Rectangle(0.25f, 0.25f, 0.5f, 0.5f);
-    auto vertexData = GLRect::GenVertexData(rect); 
+    auto rect = GL::GLRectangle(0.05f, 0.05f, 0.9f, 0.9f);
+    auto vertexData = GL::GenVertexData(rect); 
 
     vertexCount += vertexData.size(); 
     glBufferData(GL_ARRAY_BUFFER, vertexSize * vertexData.size(), &vertexData[0], GL_STATIC_DRAW);
 
     auto rectShader = Shader();
-    rectShader.AttachShader(GLRect::RECT_VERTEX_SHADER, GL_VERTEX_SHADER);
-    rectShader.AttachShader(GLRect::RECT_FRAG_SHADER, GL_FRAGMENT_SHADER); 
+    rectShader.AttachShader(GL::RECT_VERTEX_SHADER, GL_VERTEX_SHADER);
+    rectShader.AttachShader(GL::RECT_FRAG_SHADER, GL_FRAGMENT_SHADER); 
     rectShader.CompileProgram(); 
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
+    glEnable(GL_STENCIL_TEST);
+
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         rectShader.Bind(); 
+        rectShader.SetUniformVec2f("uResolution", Vec2<float>{ (float)fbWidth, (float)fbHeight });
         glDrawArrays(GL_TRIANGLES, 0, vertexCount); 
         glfwSwapBuffers(window);
         glfwPollEvents();

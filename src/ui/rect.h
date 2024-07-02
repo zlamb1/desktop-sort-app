@@ -2,20 +2,8 @@
 
 #include <vector>
 
-template<typename T> 
-struct Vec2 {
-    T x, y; 
-};
-
-template<typename T>
-struct Vec3 {
-    T x, y, z; 
-};
-
-template<typename T>
-struct Vec4 {
-    T x, y, z, w;
-};
+#include "math.h"
+#include "ui/ui_element.h"
 
 struct BorderRadius {
     float topLeft, topRight, bottomLeft, bottomRight;
@@ -29,7 +17,7 @@ struct BoundingRect {
     float left, right, top, bottom; 
 };
 
-class Rectangle {
+class Rectangle : public UIElement {
 
 public:
     Rectangle(); 
@@ -40,8 +28,10 @@ public:
     const BorderRadius& GetRadius() const;
     BorderRadius GetNormalizedRadius() const; 
 
+    virtual void DrawElement() override = 0;
+
 private:
     float x, y, width, height;
-    BorderRadius radius{ 1.0f };
+    BorderRadius radius{ 0.1f };
 
 };

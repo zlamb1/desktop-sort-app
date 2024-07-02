@@ -19,9 +19,9 @@ Vec2<float> Rectangle::GetCenter() const {
 BoundingRect Rectangle::GetBoundingRect() const {
     float ndcWidth = width * 2.0f;
     float ndcHeight = height * 2.0f;
-    float left = std::min(std::max(x, 0.0f), 1.0f) * 2.0f - 1.0f;
+    float left = x * 2.0f - 1.0f;
     float right = left + ndcWidth; 
-    float top = -(std::min(std::max(y, 0.0f), 1.0f) * 2.0f - 1.0f);
+    float top = -(y * 2.0f - 1.0f);
     float bottom = top - ndcHeight; 
     return BoundingRect{ left, right, top, bottom }; 
 }

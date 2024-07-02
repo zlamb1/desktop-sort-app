@@ -48,3 +48,8 @@ bool Shader::CompileProgram() {
 void Shader::Bind() {
     glUseProgram(m_Program); 
 }
+
+void Shader::SetUniformVec2f(const char* name, Vec2<float> data) {
+    const int location = glGetUniformLocation(m_Program, name); 
+    glUniform2fv(location, 1, &data.x); 
+}
