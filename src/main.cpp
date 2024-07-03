@@ -16,7 +16,6 @@ static void onFramebufferResize(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height); 
 }
 
-
 int main() {
     if (!glfwInit()) {
         std::cout << "failed to initialize GLFW" << std::endl;
@@ -56,7 +55,8 @@ int main() {
     glEnableVertexAttribArray(4);
     glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(GL::RectVertex, radius))); 
 
-    auto rect = GL::GLRectangle(0.05f, 0.05f, 0.9f, 0.9f);
+    auto rect = GL::GLRectangle();
+    rect.SetBoundingBox({ Vec2f{ 0.0f, 0.0f }, Vec2f{ 0.5f, 0.5f } });
     auto vertexData = GL::GenVertexData(rect); 
 
     vertexCount += vertexData.size(); 

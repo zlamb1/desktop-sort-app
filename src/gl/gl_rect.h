@@ -55,7 +55,7 @@ namespace GL {
             vec2 pos = (gl_FragCoord.xy / uResolution.xy * 2.0 - 1.0);
             int index = fragCoord.x > rect.center.x ? (fragCoord.y > rect.center.y ? 1 : 3) : (fragCoord.y > rect.center.y ? 0 : 2);
             float dist = sdf_rect(pos - rect.center, rect.extents, rect.borderRadius[index]);
-            if (dist > 0.0) discard;
+            //if (dist > 0.0) discard;
             outputColor = fragDiffuseColor;
             float borderSize = 0.1; 
             if (abs(dist) < borderSize) {
@@ -73,9 +73,9 @@ namespace GL {
         Vec4<float> radius;
     };
 
-    class GLRectangle : public Rectangle {
+    class GLRectangle : public UI::Rectangle {
         public:
-            GLRectangle(float x, float y, float width, float height) : Rectangle(x, y, width, height) {}
+            GLRectangle() : UI::Rectangle() {}
 
             void DrawElement() override {
 
