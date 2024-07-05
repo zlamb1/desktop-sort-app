@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "math.h"
+#include "math/math.hpp"
 #include "ui/ui_element.h"
 
 namespace UI {

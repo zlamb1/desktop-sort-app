@@ -2,7 +2,7 @@
 
 #include <optional>
 
-#include "math.h"
+#include "math/math.hpp"
 
 /**
  * Most attributes that are null-defined are automatically inherited.

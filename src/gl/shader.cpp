@@ -49,7 +49,21 @@ void Shader::Bind() {
     glUseProgram(m_Program); 
 }
 
-void Shader::SetUniformVec2f(const char* name, Vec2<float> data) {
-    const int location = glGetUniformLocation(m_Program, name); 
-    glUniform2fv(location, 1, &data.x); 
+GLint Shader::GetUniformLocation(const char* name) {
+    return glGetUniformLocation(m_Program, name); 
+}
+
+void Shader::SetUniformVec2f(const char* name, const Vec2f& vec) {
+    GLint location = GetUniformLocation(name); 
+    glUniform2fv(location, 1, &vec.x); 
+}
+
+void Shader::SetUniformMat3f(const char* name, const Mat3f& mat, GLboolean transpose) {
+    GLint location = GetUniformLocation(name); 
+    glUniformMatrix3fv(location, 1, transpose, &mat[0]); 
+}
+
+void Shader::SetUniformMat4f(const char* name, const Mat4f& mat, GLboolean transpose) {
+    GLint location = GetUniformLocation(name); 
+    glUniformMatrix4fv(location, 1, transpose, &mat[0]); 
 }

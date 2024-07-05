@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math.h"
+#include "math/math.hpp"
 
 // Axis-Aligned Bounding Box
 
