@@ -4,7 +4,8 @@
 
 #include "math/math.hpp"
 
-class Shader {
+class Shader 
+{
 
 public:
     Shader();

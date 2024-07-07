@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "rect.h"
+#include "rect.hpp"
 
 namespace UI {
 

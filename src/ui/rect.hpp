@@ -2,12 +2,13 @@
 
 #include <vector>
 
-#include "math/math.hpp"
-#include "ui/ui_element.h"
+#include "ui/ui_element.hpp"
 
-namespace UI {
+namespace UI 
+{
     
-    struct Radius {
+    struct Radius 
+    {
         float topLeft, topRight, bottomLeft, bottomRight;
 
         Radius(float radius) : topLeft(radius), topRight(radius), bottomLeft(radius), bottomRight(radius) {}
@@ -15,7 +16,8 @@ namespace UI {
             topLeft(topLeft), topRight(topRight), bottomLeft(bottomLeft), bottomRight(bottomRight) {}
     };
 
-    class Rectangle : public UIElement {
+    class Rectangle : public UIElement 
+    {
 
     public:
         Rectangle(); 

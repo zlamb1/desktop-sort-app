@@ -9,11 +9,13 @@ union Vec2 {
     #ifdef USE_ANON_STRUCTS
     struct { T x, y; };
     struct { T u, v; };
+    struct { T width, height; };
     #else
     T x, y;
     #endif 
 
-    T& operator[](size_t i) {
+    T& operator[](size_t i) 
+    {
         ASSERT_RANGE(i, 0, 1); 
         switch (i) {
             default:
@@ -22,7 +24,8 @@ union Vec2 {
         }
     }
 
-    const T& operator[](size_t i) const {
+    const T& operator[](size_t i) const 
+    {
         ASSERT_RANGE(i, 0, 1); 
         switch (i) {
             default:
@@ -31,7 +34,18 @@ union Vec2 {
         }
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Vec2& v) {
+    friend bool operator==(const Vec2& vec1, const Vec2& vec2)
+    {
+        return vec1.x == vec2.x && vec1.y == vec2.y; 
+    }
+
+    friend bool operator!=(const Vec2& vec1, const Vec2& vec2)
+    {
+        return vec1.x != vec2.x || vec1.y != vec2.y; 
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Vec2& v) 
+    {
         os << v.x << ", " << v.y;
         return os;
     }
@@ -50,7 +64,8 @@ union Vec3 {
     T x, y, z; 
     #endif
 
-    T& operator[](size_t i) {
+    T& operator[](size_t i) 
+    {
         ASSERT_RANGE(i, 0, 2); 
         switch (i) {
             default:
@@ -60,7 +75,8 @@ union Vec3 {
         }
     }
 
-    const T& operator[](size_t i) const {
+    const T& operator[](size_t i) const 
+    {
         ASSERT_RANGE(i, 0, 2);
         switch (i) {
             default:
@@ -70,7 +86,18 @@ union Vec3 {
         }
     }
 
-    friend std::ostream& operator<<(std::ostream& os, const Vec3& v) {
+    friend bool operator==(const Vec3& vec1, const Vec3& vec2)
+    {
+        return vec1.x == vec2.x && vec1.y == vec2.y && vec1.z == vec2.z;
+    }
+
+    friend bool operator!=(const Vec3& vec1, const Vec3& vec2)
+    {
+        return vec1.x != vec2.x || vec1.y != vec2.y || vec1.z != vec2.z; 
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Vec3& v) 
+    {
         os << v.x << ", " << v.y << ", " << v.z;
         return os;
     }
@@ -78,7 +105,7 @@ union Vec3 {
 
 typedef Vec3<float> Vec3f;
 typedef Vec3<double> Vec3d; 
-typedef Vec3<int32_t> Vec3i;  
+typedef Vec3<int32_t> Vec3i; 
 
 template<typename T>
 union Vec4 {
@@ -90,7 +117,8 @@ union Vec4 {
     T x, y, z, w;
     #endif
 
-    T& operator[](size_t i) {
+    T& operator[](size_t i) 
+    {
         ASSERT_RANGE(i, 0, 3); 
         switch (i) {
             default:
@@ -101,7 +129,8 @@ union Vec4 {
         }
     }
 
-    const T& operator[](size_t i) const {
+    const T& operator[](size_t i) const 
+    {
         ASSERT_RANGE(i, 0, 3); 
         switch (i) {
             default:
@@ -112,8 +141,18 @@ union Vec4 {
         }
     }
 
+    friend bool operator==(const Vec4& vec1, const Vec4& vec2)
+    {
+        return vec1.x == vec2.x && vec1.y == vec2.y && vec1.z == vec2.y && vec1.w == vec2.w;
+    }
 
-    friend std::ostream& operator<<(std::ostream& os, const Vec4& v) {
+    friend bool operator!=(const Vec4& vec1, const Vec4& vec2)
+    {
+        return vec1.x != vec2.x || vec1.y != vec2.y || vec1.z != vec2.z || vec1.w != vec2.w; 
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const Vec4& v) 
+    {
         os << v.x << ", " << v.y << ", " << v.z << ", " << v.w;
         return os;
     }
@@ -121,4 +160,4 @@ union Vec4 {
 
 typedef Vec4<float> Vec4f;
 typedef Vec4<double> Vec4d; 
-typedef Vec4<int32_t> Vec4i;  
+typedef Vec4<int32_t> Vec4i; 

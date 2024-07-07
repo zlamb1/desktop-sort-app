@@ -2,26 +2,29 @@
 
 #include <vector>
 
-#include "ref.h"
-#include "style.h"
+#include "ref.hpp"
+#include "style.hpp"
 
-#include "aabb.h"
+#include "aabb.hpp"
 
 namespace UI {
     
     class UIElement {
 
     public:
-        const std::vector<Ref<UIElement>>& GetChildren() const {
+        const std::vector<Ref<UIElement>>& GetChildren() const 
+        {
             return m_Children; 
         }
 
-        void AddChild(Ref<UIElement> child, bool doCascade = true) {
+        void AddChild(Ref<UIElement> child, bool doCascade = true) 
+        {
             if (doCascade) child->SetStyle(CascadeStyles(child->GetStyle(), m_Style));
             m_Children.emplace_back(child); 
         }
 
-        bool RemoveChild(Ref<UIElement> child) {
+        bool RemoveChild(Ref<UIElement> child) 
+        {
             // linear search
             int index = -1; 
             for (int i = 0; i < m_Children.size(); i++) {
@@ -31,7 +34,8 @@ namespace UI {
                 }
             }
 
-            if (index > -1) {
+            if (index > -1) 
+            {
                 m_Children.erase(m_Children.begin() + index, m_Children.begin() + index + 1); 
                 return true;
             } 
@@ -39,7 +43,8 @@ namespace UI {
             return false; 
         }
 
-        void ClearChildren() {
+        void ClearChildren() 
+        {
             m_Children.clear(); 
         }
 
@@ -56,7 +61,8 @@ namespace UI {
     protected:
         AABB2D m_BoundingBox{}; 
         std::vector<Ref<UIElement>> m_Children{}; 
-        Style m_Style{
+        Style m_Style
+        {
             .backgroundColor = optional<Color>({ 0.0f, 0.0f, 0.0f, 0.0f }),
             .textColor = optional<Color>({ 0.0f, 0.0f, 0.0f, 1.0f })
         }; 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ui/rect.h"
+#include "ui/rect.hpp"
 
 namespace GL {
     static const char* RECT_VERTEX_SHADER = R"END(
@@ -15,6 +15,8 @@ namespace GL {
         out vec4 fragDiffuseColor; 
         out vec3 fragCoord; 
 
+        uniform mat4 uProjection; 
+
         out VS_OUT {
             vec2 center;
             vec2 extents; 
@@ -22,7 +24,7 @@ namespace GL {
         } rect;
         
         void main() {
-            gl_Position = vec4(iPosition, 1.0); 
+            gl_Position = uProjection * vec4(iPosition, 1.0); 
             fragDiffuseColor = iColor; 
             fragCoord = iPosition; 
             rect.center = iCenter; 
@@ -52,16 +54,15 @@ namespace GL {
         }
 
         void main() {
-            vec2 pos = (gl_FragCoord.xy / uResolution.xy * 2.0 - 1.0);
             int index = fragCoord.x > rect.center.x ? (fragCoord.y > rect.center.y ? 1 : 3) : (fragCoord.y > rect.center.y ? 0 : 2);
-            float dist = sdf_rect(pos - rect.center, rect.extents, rect.borderRadius[index]);
-            //if (dist > 0.0) discard;
+            float dist = sdf_rect(fragCoord.xy - rect.center, rect.extents, rect.borderRadius[index]);
+            if (dist > 0.0) discard;
             outputColor = fragDiffuseColor;
-            float borderSize = 0.1; 
-            if (abs(dist) < borderSize) {
+            //float borderSize = 0.1; 
+            //if (abs(dist) < borderSize) {
                 //outputColor = vec4(1.0, 0.0, 0.0, 1.0);
-            }
-            float smoothness = 0.01;
+            //}
+            //float smoothness = 0.01;
             //outputColor.a = mix(outputColor.a, 0.0, smoothstep(smoothness, 0.0, abs(dist))); 
         })END";
 

@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQIRED True)
 
 include_directories(glad/include)
 
-add_executable(${CMAKE_PROJECT_NAME} src/main.cpp src/ui/rect.cpp src/gl/shader.cpp)
+add_executable(${CMAKE_PROJECT_NAME} src/main.cpp src/window/glfw_window.cpp src/ui/rect.cpp src/gl/buf.cpp src/gl/shader.cpp)
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE src)
 

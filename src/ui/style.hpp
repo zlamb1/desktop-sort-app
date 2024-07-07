@@ -13,9 +13,11 @@
 template<typename T>
 using optional = std::optional<T>;
 
-namespace UI {
+namespace UI 
+{
 
-    struct Color {
+    struct Color 
+    {
         float r, g, b, a; 
 
         Color() : r(0), g(0), b(0), a(1) {}
@@ -25,16 +27,17 @@ namespace UI {
         Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
     };
 
-    struct Style {
+    struct Style 
+    {
         optional<Color> backgroundColor; 
         optional<Color> textColor; 
     };
 
-    static Style CascadeStyles(const Style& child, const Style& parent) {
+    static Style CascadeStyles(const Style& child, const Style& parent) 
+    {
         Style copy = child; 
         if (parent.textColor) copy.textColor = parent.textColor; 
         return copy; 
     }
 
 }
-

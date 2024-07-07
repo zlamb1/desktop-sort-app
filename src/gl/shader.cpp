@@ -2,13 +2,17 @@
 
 #include <glad/glad.h>
 
-#include "shader.h"
+#include "shader.hpp"
 
-Shader::Shader() : m_Program(0) {
+#define ASSERT_LOC(LOCATION) (assert((location) > -1))
+
+Shader::Shader() : m_Program(0) 
+{
     m_Program = glCreateProgram(); 
 }
 
-bool Shader::AttachShader(const char* shaderSrc, GLenum shaderType) {
+bool Shader::AttachShader(const char* shaderSrc, GLenum shaderType) 
+{
     int32_t success;
     char infoLog[512]; 
     uint32_t shader = glCreateShader(shaderType);
@@ -26,7 +30,8 @@ bool Shader::AttachShader(const char* shaderSrc, GLenum shaderType) {
     return true; 
 }
 
-bool Shader::CompileProgram() {
+bool Shader::CompileProgram() 
+{
     int32_t success;
     char infoLog[512]; 
     glLinkProgram(m_Program);
@@ -45,25 +50,33 @@ bool Shader::CompileProgram() {
     return success; 
 }
 
-void Shader::Bind() {
+void Shader::Bind() 
+{
     glUseProgram(m_Program); 
 }
 
-GLint Shader::GetUniformLocation(const char* name) {
+GLint Shader::GetUniformLocation(const char* name) 
+{
     return glGetUniformLocation(m_Program, name); 
 }
 
-void Shader::SetUniformVec2f(const char* name, const Vec2f& vec) {
+void Shader::SetUniformVec2f(const char* name, const Vec2f& vec) 
+{
     GLint location = GetUniformLocation(name); 
+    ASSERT_LOC(location); 
     glUniform2fv(location, 1, &vec.x); 
 }
 
-void Shader::SetUniformMat3f(const char* name, const Mat3f& mat, GLboolean transpose) {
+void Shader::SetUniformMat3f(const char* name, const Mat3f& mat, GLboolean transpose) 
+{
     GLint location = GetUniformLocation(name); 
+    ASSERT_LOC(location); 
     glUniformMatrix3fv(location, 1, transpose, &mat[0]); 
 }
 
-void Shader::SetUniformMat4f(const char* name, const Mat4f& mat, GLboolean transpose) {
+void Shader::SetUniformMat4f(const char* name, const Mat4f& mat, GLboolean transpose) 
+{
     GLint location = GetUniformLocation(name); 
+    ASSERT_LOC(location); 
     glUniformMatrix4fv(location, 1, transpose, &mat[0]); 
 }
