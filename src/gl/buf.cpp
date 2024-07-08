@@ -11,6 +11,12 @@ namespace GL
     {
         if (m_ID) glDeleteVertexArrays(1, &m_ID); 
     }
+    
+    void VertexArray::SetFormat(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* offset)
+    {
+        glEnableVertexAttribArray(index); 
+        glVertexAttribPointer(index, size, type, normalized, stride, offset); 
+    }
 
     void VertexArray::Bind() const
     {

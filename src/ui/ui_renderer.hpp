@@ -9,7 +9,7 @@ namespace UI
     {
         public:
             virtual void DrawElements() = 0; 
-            virtual void FlowLayout(const Vec2i& framebufferSize) = 0; 
+            virtual void FlowLayout(const VML::Vec2i& framebufferSize) = 0; 
 
         private:
             Frame m_Root{};

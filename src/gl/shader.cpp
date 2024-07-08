@@ -60,21 +60,21 @@ GLint Shader::GetUniformLocation(const char* name)
     return glGetUniformLocation(m_Program, name); 
 }
 
-void Shader::SetUniformVec2f(const char* name, const Vec2f& vec) 
+void Shader::SetUniformVec2f(const char* name, const VML::Vec2f& vec) 
 {
     GLint location = GetUniformLocation(name); 
     ASSERT_LOC(location); 
     glUniform2fv(location, 1, &vec.x); 
 }
 
-void Shader::SetUniformMat3f(const char* name, const Mat3f& mat, GLboolean transpose) 
+void Shader::SetUniformMat3f(const char* name, const VML::Mat3f& mat, GLboolean transpose) 
 {
     GLint location = GetUniformLocation(name); 
     ASSERT_LOC(location); 
     glUniformMatrix3fv(location, 1, transpose, &mat[0]); 
 }
 
-void Shader::SetUniformMat4f(const char* name, const Mat4f& mat, GLboolean transpose) 
+void Shader::SetUniformMat4f(const char* name, const VML::Mat4f& mat, GLboolean transpose) 
 {
     GLint location = GetUniformLocation(name); 
     ASSERT_LOC(location); 

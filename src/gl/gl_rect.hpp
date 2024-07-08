@@ -67,11 +67,11 @@ namespace GL {
         })END";
 
     struct RectVertex {
-        Vec3f pos; 
-        Vec4f rgba;
-        Vec2f center; 
-        Vec2f extents; 
-        Vec4f radius;
+        VML::Vec3f pos; 
+        VML::Vec4f rgba;
+        VML::Vec2f center; 
+        VML::Vec2f extents; 
+        VML::Vec4f radius;
     };
 
     class GLRectangle : public UI::Rectangle {

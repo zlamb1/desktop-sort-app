@@ -28,6 +28,8 @@ namespace GL
             VertexArray();
             ~VertexArray(); 
 
+            void SetFormat(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* offset); 
+
             void Bind() const;
 
         private:

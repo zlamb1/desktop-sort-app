@@ -2,9 +2,9 @@
 
 #include <glad/glad.h>
 
-#include "ui/rect.hpp"
 #include "gl/shader.hpp"
 #include "gl/gl_renderer.hpp"
+#include "ui/rect.hpp"
 #include "window/glfw_window.hpp"
 
 int main() 
@@ -17,7 +17,7 @@ int main()
 
     int32_t width = 500, height = 500; 
     Ref<WindowWrapper> window = CreateRef<GLFWWindowWrapper>("Hello, window!", width, height);
-    Mat4f orthoProjection = CreateOrthoProjectionf(0.0f, width, 0.0f, height, -1.0f, 1.0f); 
+    VML::Mat4f orthoProjection = VML::CreateOrthoProjectionf(0.0f, width, 0.0f, height, -1.0f, 1.0f); 
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) 
     {
@@ -44,8 +44,9 @@ int main()
     glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(GL::RectVertex, radius))); 
 
     auto rect = GL::GLRectangle();
-    rect.SetBoundingBox({ Vec2f{ 100.0f, 100.0f }, Vec2f{ 50.0f, 50.0f } });
-    auto vertexData = GL::GenVertexData(rect); 
+    rect.SetBoundingBox({ VML::Vec2f{ 100.0f, 100.0f }, VML::Vec2f{ 50.0f, 50.0f } });
+    std::vector<GL::RectVertex> vec{};
+    auto vertexData = GL::GenVertexData(vec, rect); 
 
     vertexCount += vertexData.size(); 
     glBufferData(GL_ARRAY_BUFFER, vertexSize * vertexData.size(), &vertexData[0], GL_STATIC_DRAW);
@@ -64,7 +65,7 @@ int main()
         {
             window->m_FramebufferSizeDirty = false; 
             auto framebufferSize = window->GetFramebufferSize(); 
-            orthoProjection = CreateOrthoProjectionf(0.0f, framebufferSize.width, 0.0f, framebufferSize.height, -1.0f, 1.0f); 
+            orthoProjection = VML::CreateOrthoProjectionf(0.0f, framebufferSize.width, 0.0f, framebufferSize.height, -1.0f, 1.0f); 
             glViewport(0, 0, framebufferSize.width, framebufferSize.height); 
         }
 

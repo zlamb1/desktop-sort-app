@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/math.hpp"
+#include "vml/vml.hpp"
 
 // Axis-Aligned Bounding Box
 
@@ -11,7 +11,7 @@ namespace UI {
     };
 
     struct AABB2D {
-        Vec2f center, size; 
+        VML::Vec2f center, size; 
 
         Dimension2D GetDimensions() const {
             return Dimension2D{center.x - size.x, center.x + size.x, center.y + size.y, center.y - size.y};
@@ -19,7 +19,7 @@ namespace UI {
     };
 
     struct AABB3D {
-        Vec3f center, size; 
+        VML::Vec3f center, size; 
     };
 
 }

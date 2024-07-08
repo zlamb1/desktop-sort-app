@@ -2,7 +2,7 @@
 
 #include <optional>
 
-#include "math/math.hpp"
+#include "vml/vml.hpp"
 
 /**
  * Most attributes that are null-defined are automatically inherited.
@@ -21,9 +21,9 @@ namespace UI
         float r, g, b, a; 
 
         Color() : r(0), g(0), b(0), a(1) {}
-        Color(Vec3<float> rgb) : r(rgb.x), g(rgb.y), b(rgb.z), a(1) {}
+        Color(VML::Vec3<float> rgb) : r(rgb.x), g(rgb.y), b(rgb.z), a(1) {}
         Color(float r, float g, float b) : r(r), g(g), b(b), a(1) {}
-        Color(Vec4<float> rgba) : r(rgba.x), g(rgba.y), b(rgba.z), a(rgba.w) {} 
+        Color(VML::Vec4<float> rgba) : r(rgba.x), g(rgba.y), b(rgba.z), a(rgba.w) {} 
         Color(float r, float g, float b, float a) : r(r), g(g), b(b), a(a) {}
     };
 

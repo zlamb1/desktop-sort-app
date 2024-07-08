@@ -16,3 +16,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME} glfw)
 
 add_library(glad glad/src/glad.c)
 target_link_libraries(${CMAKE_PROJECT_NAME} glad)
+
+add_subdirectory(vml)
+target_link_libraries(${CMAKE_PROJECT_NAME} vml)
