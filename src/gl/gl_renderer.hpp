@@ -5,8 +5,6 @@
 
 #include "buf.hpp"
 #include "gl_rect.hpp"
-#include "ui/rect.hpp"
-#include "ui/ui_renderer.hpp"
 
 namespace {
     VML::Vec4f GenRGBA() 
@@ -14,15 +12,14 @@ namespace {
         return { rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, 1.0f }; 
     }
 
-    void GenRect(std::vector<GL::RectVertex>& vec, VML::Vec4f dim, VML::Vec4f rgba, VML::Vec2f center, VML::Vec4f borderRadius) 
+    void GenRect(std::vector<GL::RectVertex>& vec, const GL::AABB2D& dim, const VML::Vec4f& rgba) 
     {
-        VML::Vec2f extents = { (dim.y - dim.x) / 2.0f, (dim.z - dim.w) / 2.0f };
-        vec.emplace_back(GL::RectVertex{{ dim.x, dim.z, 0.0f }, rgba, center, extents, borderRadius});
-        vec.emplace_back(GL::RectVertex{{ dim.x, dim.w, 0.0f }, rgba, center, extents, borderRadius});
-        vec.emplace_back(GL::RectVertex{{ dim.y, dim.w, 0.0f }, rgba, center, extents, borderRadius});
-        vec.emplace_back(GL::RectVertex{{ dim.y, dim.w, 0.0f }, rgba, center, extents, borderRadius});
-        vec.emplace_back(GL::RectVertex{{ dim.y, dim.z, 0.0f }, rgba, center, extents, borderRadius});
-        vec.emplace_back(GL::RectVertex{{ dim.x, dim.z, 0.0f }, rgba, center, extents, borderRadius});
+        vec.emplace_back(GL::RectVertex{{ dim.left, dim.top, 0.0f }, rgba});
+        vec.emplace_back(GL::RectVertex{{ dim.left, dim.bottom, 0.0f }, rgba});
+        vec.emplace_back(GL::RectVertex{{ dim.right, dim.bottom, 0.0f }, rgba});
+        vec.emplace_back(GL::RectVertex{{ dim.right, dim.bottom, 0.0f }, rgba});
+        vec.emplace_back(GL::RectVertex{{ dim.right, dim.top, 0.0f }, rgba});
+        vec.emplace_back(GL::RectVertex{{ dim.left, dim.top, 0.0f }, rgba});
     }
 }
 
@@ -30,22 +27,14 @@ namespace {
 
 namespace GL 
 {
-    std::vector<RectVertex> GenVertexData(std::vector<RectVertex>& vec, const GLRectangle& rect) 
+    std::vector<RectVertex> GenVertexData(std::vector<RectVertex>& vec, const Rectangle& rect) 
     {
-        auto dimensions = rect.GetBoundingBox().GetDimensions(); 
-        auto halfWidth = (dimensions.right - dimensions.left) / 2.0f;
-        auto halfHeight = (dimensions.top - dimensions.bottom) / 2.0f; 
-        auto radius = rect.GetRadius(); 
-        
         VML::Vec4f rgba = GenRGBA(); 
-        GenRect(vec, VML::Vec4f{ dimensions.left, dimensions.right, dimensions.top, dimensions.bottom }, 
-            rgba, VML::Vec2f{ dimensions.left + halfWidth, dimensions.top - halfHeight }, 
-            { radius.topLeft, radius.topRight, radius.bottomLeft, radius.bottomRight }); 
-
+        GenRect(vec, rect.m_BBox, rgba); 
         return vec;
     }
 
-    class UIRenderer : public UI::UIRenderer 
+    class UIRenderer
     {
         public:
             UIRenderer(const VML::Vec2i& framebufferSize) : m_FramebufferSize(framebufferSize)
@@ -59,12 +48,9 @@ namespace GL
                 constexpr size_t vertexSize = sizeof(RectVertex);
                 m_VAO.SetFormat(0, 3, GL_FLOAT, GL_FALSE, vertexSize, (void*)0);
                 m_VAO.SetFormat(0, 4, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(RectVertex, rgba)));
-                m_VAO.SetFormat(0, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(RectVertex, center)));
-                m_VAO.SetFormat(0, 2, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(RectVertex, extents)));
-                m_VAO.SetFormat(0, 4, GL_FLOAT, GL_FALSE, vertexSize, (void*)(offsetof(RectVertex, radius)));
             }
 
-            void DrawElements() override 
+            void DrawElements() 
             {
                 m_VAO.Bind(); 
                 m_RectangleShader.Bind(); 
@@ -72,7 +58,7 @@ namespace GL
                 glDrawArrays(GL_TRIANGLES, 0, m_VertexCount); 
             }
 
-            void FlowLayout(const VML::Vec2i& framebufferSize) override
+            void FlowLayout(const VML::Vec2i& framebufferSize)
             {
                 m_FramebufferSize = framebufferSize; 
                 m_OrthoProjection = VML::CreateOrthoProjectionf(0.0f, m_FramebufferSize.width, 0.0f, m_FramebufferSize.height, -1.0f, 1.0f);
